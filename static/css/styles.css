@@ -1,16 +1,18 @@
 :root {
-    --primary-color: #3498db;
-    --secondary-color: #2980b9;
-    --accent-color: #f39c12;
-    --background-color: #f5f7fa;
-    --text-color: #333;
-    --light-gray: #ecf0f1;
-    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --sunny-color: #f1c40f;
-    --cloudy-color: #95a5a6;
+    --primary-color: #2c3e50;
+    --secondary-color: #34495e;
+    --accent-color: #e67e22;
+    --background-color: #1a1a1a;
+    --content-bg: #2d2d2d;
+    --text-color: #ecf0f1;
+    --light-gray: #3d3d3d;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --sunny-color: #e67e22;
+    --cloudy-color: #7f8c8d;
     --rainy-color: #3498db;
-    --stormy-color: #34495e;
+    --stormy-color: #8e44ad;
     --snowy-color: #ecf0f1;
+    --border-color: #444;
 }
 
 * {
@@ -20,14 +22,14 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 2rem;
 }
@@ -38,20 +40,24 @@ header {
 }
 
 header h1 {
-    color: var(--primary-color);
+    color: var(--text-color);
     margin-bottom: 0.5rem;
+    font-weight: 300;
+    letter-spacing: 1px;
 }
 
 header p {
-    color: #666;
+    color: #999;
+    font-size: 0.9rem;
 }
 
 .search-form {
-    background-color: white;
+    background-color: var(--content-bg);
     padding: 2rem;
     border-radius: 8px;
     box-shadow: var(--card-shadow);
     margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
 }
 
 .form-group {
@@ -59,23 +65,31 @@ header p {
 }
 
 .note {
-    font-size: 0.9rem;
-    color: #666;
+    font-size: 0.8rem;
+    color: #999;
     margin-top: 0.5rem;
 }
 
 label {
     display: block;
     margin-bottom: 0.5rem;
-    font-weight: 600;
+    font-weight: 400;
+    color: #ccc;
 }
 
 input {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ddd;
+    background-color: var(--light-gray);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     font-size: 1rem;
+    color: var(--text-color);
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--accent-color);
 }
 
 .search-btn {
@@ -91,7 +105,7 @@ input {
 }
 
 .search-btn:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--accent-color);
 }
 
 .hidden {
@@ -104,12 +118,12 @@ input {
 }
 
 .loader {
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid var(--primary-color);
+    border: 3px solid var(--light-gray);
+    border-top: 3px solid var(--accent-color);
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 2s linear infinite;
+    width: 40px;
+    height: 40px;
+    animation: spin 1.5s linear infinite;
     margin: 0 auto 1rem;
 }
 
@@ -119,23 +133,27 @@ input {
 }
 
 #error-message {
-    background-color: #ffebee;
-    border-left: 4px solid #f44336;
+    background-color: rgba(231, 76, 60, 0.2);
+    border-left: 4px solid #e74c3c;
     padding: 1rem;
     border-radius: 4px;
     margin-bottom: 2rem;
 }
 
 #results {
-    background-color: white;
+    background-color: var(--content-bg);
     padding: 2rem;
     border-radius: 8px;
     box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
 }
 
 #results h2 {
     margin-bottom: 1.5rem;
-    color: var(--primary-color);
+    color: var(--text-color);
+    font-weight: 300;
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
 }
 
 /* Table Styles */
@@ -143,8 +161,7 @@ input {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
-    box-shadow: var(--card-shadow);
-    border-radius: 8px;
+    background-color: var(--content-bg);
     overflow: hidden;
 }
 
@@ -152,29 +169,32 @@ input {
 .weather-table td {
     padding: 0.75rem;
     text-align: center;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border-color);
 }
 
 .weather-table thead {
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     color: white;
 }
 
 .weather-table th {
-    font-weight: 600;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
 }
 
 .weather-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .weather-table tbody tr:hover {
-    background-color: #f1f1f1;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .year-cell {
     font-weight: bold;
-    background-color: #f5f5f5;
+    background-color: var(--secondary-color);
 }
 
 .temp-container {
@@ -202,45 +222,46 @@ input {
 
 /* Weather Icons */
 .weather-icon {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     display: inline-block;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     margin: 0 auto;
+    opacity: 0.9;
 }
 
 .icon-sunny {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23f1c40f"><circle cx="12" cy="12" r="5"/><path d="M12 3v2M12 19v2M5.64 5.64l1.41 1.41M16.95 16.95l1.41 1.41M3 12h2M19 12h2M5.64 18.36l1.41-1.41M16.95 7.05l1.41-1.41"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23e67e22"><circle cx="12" cy="12" r="5"/><path d="M12 3v2M12 19v2M5.64 5.64l1.41 1.41M16.95 16.95l1.41 1.41M3 12h2M19 12h2M5.64 18.36l1.41-1.41M16.95 7.05l1.41-1.41"/></svg>');
 }
 
 .icon-partly-cloudy {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="8" cy="6" r="3" fill="%23f1c40f"/><path fill="%2395a5a6" d="M18 14h-1.5c0-3.59-2.91-6.5-6.5-6.5-2.69 0-5.05 1.64-6.04 4h-.46C2.12 11.5 1 12.62 1 14s1.12 2.5 2.5 2.5h14c1.38 0 2.5-1.12 2.5-2.5s-1.12-2.5-2.5-2.5z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="8" cy="6" r="3" fill="%23e67e22"/><path fill="%237f8c8d" d="M18 14h-1.5c0-3.59-2.91-6.5-6.5-6.5-2.69 0-5.05 1.64-6.04 4h-.46C2.12 11.5 1 12.62 1 14s1.12 2.5 2.5 2.5h14c1.38 0 2.5-1.12 2.5-2.5s-1.12-2.5-2.5-2.5z"/></svg>');
 }
 
 .icon-cloudy {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2395a5a6"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%237f8c8d"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>');
 }
 
 .icon-foggy {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2395a5a6"><path d="M5 5h14M5 10h14M5 15h14M5 20h14"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%237f8c8d"><path d="M5 5h14M5 10h14M5 15h14M5 20h14"/></svg>');
 }
 
 .icon-drizzle {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%2395a5a6" d="M19 8h-1.26c-.19-.73-.48-1.42-.85-2.06-.17-.3-.36-.59-.56-.87-.01-.01-.02-.03-.03-.04-.32-.45-.88-.58-1.3-.25-.42.33-.45.88-.13 1.33.16.22.31.46.44.7.28.53.5 1.1.63 1.7-.31-.12-.64-.2-.99-.2-.78 0-1.49.29-2.03.77-.39-.44-.97-.77-1.65-.77-.5 0-.96.15-1.34.4-.35-.46-.91-.75-1.55-.75-.56 0-1.07.19-1.48.5C8.24 8.1 7.66 8 7 8c-2.21 0-4 1.79-4 4s1.79 4 4 4h12c1.66 0 3-1.34 3-3s-1.34-3-3-3z"/><path fill="%233498db" d="M10 19l-2 3M14 19l-2 3M12 17l-2 3"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%237f8c8d" d="M19 8h-1.26c-.19-.73-.48-1.42-.85-2.06-.17-.3-.36-.59-.56-.87-.01-.01-.02-.03-.03-.04-.32-.45-.88-.58-1.3-.25-.42.33-.45.88-.13 1.33.16.22.31.46.44.7.28.53.5 1.1.63 1.7-.31-.12-.64-.2-.99-.2-.78 0-1.49.29-2.03.77-.39-.44-.97-.77-1.65-.77-.5 0-.96.15-1.34.4-.35-.46-.91-.75-1.55-.75-.56 0-1.07.19-1.48.5C8.24 8.1 7.66 8 7 8c-2.21 0-4 1.79-4 4s1.79 4 4 4h12c1.66 0 3-1.34 3-3s-1.34-3-3-3z"/><path fill="%233498db" d="M10 19l-2 3M14 19l-2 3M12 17l-2 3"/></svg>');
 }
 
 .icon-rainy {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%2395a5a6" d="M19 8h-1.26c-.19-.73-.48-1.42-.85-2.06-.17-.3-.36-.59-.56-.87-.01-.01-.02-.03-.03-.04-.32-.45-.88-.58-1.3-.25-.42.33-.45.88-.13 1.33.16.22.31.46.44.7.28.53.5 1.1.63 1.7-.31-.12-.64-.2-.99-.2-.78 0-1.49.29-2.03.77-.39-.44-.97-.77-1.65-.77-.5 0-.96.15-1.34.4-.35-.46-.91-.75-1.55-.75-.56 0-1.07.19-1.48.5C8.24 8.1 7.66 8 7 8c-2.21 0-4 1.79-4 4s1.79 4 4 4h12c1.66 0 3-1.34 3-3s-1.34-3-3-3z"/><path fill="%233498db" d="M8 18v3M12 18v3M16 18v3M10 20v3M14 20v3"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%237f8c8d" d="M19 8h-1.26c-.19-.73-.48-1.42-.85-2.06-.17-.3-.36-.59-.56-.87-.01-.01-.02-.03-.03-.04-.32-.45-.88-.58-1.3-.25-.42.33-.45.88-.13 1.33.16.22.31.46.44.7.28.53.5 1.1.63 1.7-.31-.12-.64-.2-.99-.2-.78 0-1.49.29-2.03.77-.39-.44-.97-.77-1.65-.77-.5 0-.96.15-1.34.4-.35-.46-.91-.75-1.55-.75-.56 0-1.07.19-1.48.5C8.24 8.1 7.66 8 7 8c-2.21 0-4 1.79-4 4s1.79 4 4 4h12c1.66 0 3-1.34 3-3s-1.34-3-3-3z"/><path fill="%233498db" d="M8 18v3M12 18v3M16 18v3M10 20v3M14 20v3"/></svg>');
 }
 
 .icon-stormy {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%2395a5a6" d="M19 8h-1.26c-.19-.73-.48-1.42-.85-2.06-.17-.3-.36-.59-.56-.87-.01-.01-.02-.03-.03-.04-.32-.45-.88-.58-1.3-.25-.42.33-.45.88-.13 1.33.16.22.31.46.44.7.28.53.5 1.1.63 1.7-.31-.12-.64-.2-.99-.2-.78 0-1.49.29-2.03.77-.39-.44-.97-.77-1.65-.77-.5 0-.96.15-1.34.4-.35-.46-.91-.75-1.55-.75-.56 0-1.07.19-1.48.5C8.24 8.1 7.66 8 7 8c-2.21 0-4 1.79-4 4s1.79 4 4 4h12c1.66 0 3-1.34 3-3s-1.34-3-3-3z"/><path fill="%23f1c40f" d="M12 16l-2 4h4l-2 4"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%237f8c8d" d="M19 8h-1.26c-.19-.73-.48-1.42-.85-2.06-.17-.3-.36-.59-.56-.87-.01-.01-.02-.03-.03-.04-.32-.45-.88-.58-1.3-.25-.42.33-.45.88-.13 1.33.16.22.31.46.44.7.28.53.5 1.1.63 1.7-.31-.12-.64-.2-.99-.2-.78 0-1.49.29-2.03.77-.39-.44-.97-.77-1.65-.77-.5 0-.96.15-1.34.4-.35-.46-.91-.75-1.55-.75-.56 0-1.07.19-1.48.5C8.24 8.1 7.66 8 7 8c-2.21 0-4 1.79-4 4s1.79 4 4 4h12c1.66 0 3-1.34 3-3s-1.34-3-3-3z"/><path fill="%23e67e22" d="M12 16l-2 4h4l-2 4"/></svg>');
 }
 
 .icon-snowy {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%2395a5a6" d="M19 8h-1.26c-.19-.73-.48-1.42-.85-2.06-.17-.3-.36-.59-.56-.87-.01-.01-.02-.03-.03-.04-.32-.45-.88-.58-1.3-.25-.42.33-.45.88-.13 1.33.16.22.31.46.44.7.28.53.5 1.1.63 1.7-.31-.12-.64-.2-.99-.2-.78 0-1.49.29-2.03.77-.39-.44-.97-.77-1.65-.77-.5 0-.96.15-1.34.4-.35-.46-.91-.75-1.55-.75-.56 0-1.07.19-1.48.5C8.24 8.1 7.66 8 7 8c-2.21 0-4 1.79-4 4s1.79 4 4 4h12c1.66 0 3-1.34 3-3s-1.34-3-3-3z"/><path fill="%23ecf0f1" d="M8 18l2 2M8 20l2-2M12 18l2 2M12 20l2-2M16 18l2 2M16 20l2-2"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%237f8c8d" d="M19 8h-1.26c-.19-.73-.48-1.42-.85-2.06-.17-.3-.36-.59-.56-.87-.01-.01-.02-.03-.03-.04-.32-.45-.88-.58-1.3-.25-.42.33-.45.88-.13 1.33.16.22.31.46.44.7.28.53.5 1.1.63 1.7-.31-.12-.64-.2-.99-.2-.78 0-1.49.29-2.03.77-.39-.44-.97-.77-1.65-.77-.5 0-.96.15-1.34.4-.35-.46-.91-.75-1.55-.75-.56 0-1.07.19-1.48.5C8.24 8.1 7.66 8 7 8c-2.21 0-4 1.79-4 4s1.79 4 4 4h12c1.66 0 3-1.34 3-3s-1.34-3-3-3z"/><path fill="%23ecf0f1" d="M8 18l2 2M8 20l2-2M12 18l2 2M12 20l2-2M16 18l2 2M16 20l2-2"/></svg>');
 }
 
 .icon-unknown {
@@ -252,11 +273,12 @@ footer {
     margin-top: 2rem;
     padding: 1rem;
     color: #666;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border-color);
 }
 
 footer a {
-    color: var(--primary-color);
+    color: var(--accent-color);
     text-decoration: none;
 }
 
@@ -270,7 +292,7 @@ footer a:hover {
     }
     
     .weather-table {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
     
     .weather-table th,
