@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Predicción del Tiempo Histórica</title>
+    <title>Histórico del Tiempo</title>
     <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Predicción del Tiempo Basada en Datos Históricos</h1>
-            <p>Consulta el pronóstico basado en datos meteorológicos de los últimos 5 años</p>
+            <h1>Histórico del Tiempo de los Últimos 5 Años</h1>
+            <p>Consulta cómo ha sido el tiempo en los últimos 5 años para los días seleccionados</p>
         </header>
 
         <section class="search-form">
@@ -20,18 +20,13 @@
                     <input type="text" id="city" name="city" required placeholder="Ej: Santiago, Chile">
                 </div>
                 
-                <div class="form-group date-inputs">
-                    <div>
-                        <label for="start-date">Fecha inicial:</label>
-                        <input type="date" id="start-date" name="start_date" required>
-                    </div>
-                    <div>
-                        <label for="end-date">Fecha final:</label>
-                        <input type="date" id="end-date" name="end_date" required>
-                    </div>
+                <div class="form-group">
+                    <label for="start-date">Fecha inicial:</label>
+                    <input type="date" id="start-date" name="start_date" required>
+                    <p class="note">Se mostrarán datos para 5 días a partir de esta fecha</p>
                 </div>
 
-                <button type="submit" class="search-btn">Buscar Pronóstico</button>
+                <button type="submit" class="search-btn">Buscar Histórico</button>
             </form>
         </section>
 
@@ -45,13 +40,13 @@
         </section>
 
         <section id="results" class="hidden">
-            <h2>Pronóstico para <span id="city-name"></span></h2>
+            <h2>Histórico para <span id="city-name"></span></h2>
             <div id="forecast-container"></div>
         </section>
     </div>
 
     <footer>
-        <p>Basado en datos históricos de los últimos 5 años | <a href="https://open-meteo.com/" target="_blank">Datos de Open-Meteo</a></p>
+        <p>Datos históricos de Open-Meteo | <a href="https://open-meteo.com/" target="_blank">open-meteo.com</a></p>
     </footer>
 
     <script src="{{ url_for('static', path='/js/script.js') }}"></script>

@@ -3,7 +3,7 @@
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from typing import List
+from typing import List, Dict
 import statistics
 from datetime import datetime, timedelta
 import os
@@ -54,20 +54,37 @@ WEATHER_CODE_MAP = {
     99: "Tormenta con granizo fuerte"
 }
 
+# Categorías de clima simplificadas
+WEATHER_CATEGORIES = {
+    "Soleado": [0, 1],
+    "Parcialmente nublado": [2],
+    "Nublado": [3],
+    "Niebla": [45, 48],
+    "Llovizna": [51, 53, 55, 56, 57],
+    "Lluvia": [61, 63, 65, 66, 67, 80, 81, 82],
+    "Nieve": [71, 73, 75, 77, 85, 86],
+    "Tormenta": [95, 96, 99]
+}
+
+def get_weather_category(code):
+    for category, codes in WEATHER_CATEGORIES.items():
+        if code in codes:
+            return category
+    return "Desconocido"
+
 @app.get("/", response_class=templates.TemplateResponse)
 async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/forecast")
-def historical_forecast(city: str, start_date: str, end_date: str):
+def historical_forecast(city: str, start_date: str):
     try:
         start = datetime.strptime(start_date, "%Y-%m-%d")
-        end = datetime.strptime(end_date, "%Y-%m-%d")
+        # Calcular end_date automáticamente (start_date + 4 días = 5 días en total)
+        end = start + timedelta(days=4)
+        end_date = end.strftime("%Y-%m-%d")
     except ValueError:
-        return {"error": "Fechas deben tener formato YYYY-MM-DD"}
-
-    if start > end:
-        return {"error": "start_date debe ser anterior a end_date"}
+        return {"error": "Fecha debe tener formato YYYY-MM-DD"}
 
     # Obtener lat/lon de la ciudad usando Nominatim (con header User-Agent obligatorio)
     try:
@@ -83,73 +100,63 @@ def historical_forecast(city: str, start_date: str, end_date: str):
     lat = float(geo_data[0]['lat'])
     lon = float(geo_data[0]['lon'])
 
-    num_days = (end - start).days + 1
-    result = []
-
-    for year_offset in range(1, 6):
-        historic_start = (start - timedelta(days=365 * year_offset)).strftime("%Y-%m-%d")
-        historic_end = (end - timedelta(days=365 * year_offset)).strftime("%Y-%m-%d")
-
-        try:
-            weather_resp = requests.get(WEATHER_URL, params={
-                "latitude": lat,
-                "longitude": lon,
-                "start_date": historic_start,
-                "end_date": historic_end,
-                "hourly": "temperature_2m,weathercode",
-                "timezone": "auto"
-            })
-            weather_resp.raise_for_status()
-            data = weather_resp.json()
-        except Exception:
-            continue
-
-        timestamps = data.get("hourly", {}).get("time", [])
-        temps = data.get("hourly", {}).get("temperature_2m", [])
-        codes = data.get("hourly", {}).get("weathercode", [])
-
-        if not timestamps or not temps:
-            continue
-
-        daily_data = {}
-        for ts, temp, code in zip(timestamps, temps, codes):
-            day = ts.split("T")[0]
-            if day not in daily_data:
-                daily_data[day] = {"temps": [], "codes": []}
-            daily_data[day]["temps"].append(temp)
-            daily_data[day]["codes"].append(code)
-
-        for i in range(num_days):
-            target_date = start + timedelta(days=i)
-            comp_date = (target_date - timedelta(days=365 * year_offset)).strftime("%Y-%m-%d")
-            if comp_date in daily_data:
-                entry = daily_data[comp_date]
-                result.append({
-                    "date": target_date.strftime("%Y-%m-%d"),
-                    "temp": statistics.mean(entry["temps"]),
-                    "condition": max(set(entry["codes"]), key=entry["codes"].count)
-                })
-
-    aggregated = {}
-    for item in result:
-        key = item["date"]
-        if key not in aggregated:
-            aggregated[key] = {"temps": [], "codes": []}
-        aggregated[key]["temps"].append(item["temp"])
-        aggregated[key]["codes"].append(item["condition"])
-
+    # Resultados para cada día del periodo
     final_result = []
-    for date in sorted(aggregated.keys()):
-        temps = aggregated[date]["temps"]
-        codes = aggregated[date]["codes"]
-        most_common_code = max(set(codes), key=codes.count)
-        final_result.append({
-            "date": date,
-            "expected_avg_temp_c": round(statistics.mean(temps), 1),
-            "expected_condition_code": most_common_code,
-            "expected_condition_text": WEATHER_CODE_MAP.get(most_common_code, "Desconocido")
-        })
-
+    
+    # Para cada día en el rango seleccionado
+    for day_offset in range(5):  # 5 días en total
+        target_date = start + timedelta(days=day_offset)
+        target_date_str = target_date.strftime("%Y-%m-%d")
+        
+        # Histórico de los últimos 5 años para el mismo día
+        historical_data = []
+        
+        # Consultar los últimos 5 años
+        for year_offset in range(1, 6):
+            historic_date = target_date.replace(year=target_date.year - year_offset)
+            historic_date_str = historic_date.strftime("%Y-%m-%d")
+            
+            try:
+                # Consultar solo ese día específico
+                weather_resp = requests.get(WEATHER_URL, params={
+                    "latitude": lat,
+                    "longitude": lon,
+                    "start_date": historic_date_str,
+                    "end_date": historic_date_str,
+                    "daily": "temperature_2m_max,temperature_2m_min,weathercode",
+                    "timezone": "auto"
+                })
+                weather_resp.raise_for_status()
+                data = weather_resp.json()
+                
+                # Extraer datos diarios
+                daily_data = data.get("daily", {})
+                dates = daily_data.get("time", [])
+                
+                if dates and historic_date_str in dates:
+                    idx = dates.index(historic_date_str)
+                    temp_max = daily_data.get("temperature_2m_max", [])[idx]
+                    temp_min = daily_data.get("temperature_2m_min", [])[idx]
+                    weather_code = daily_data.get("weathercode", [])[idx]
+                    
+                    historical_data.append({
+                        "year": historic_date.year,
+                        "temp_max": temp_max,
+                        "temp_min": temp_min,
+                        "weather_code": weather_code,
+                        "weather_text": WEATHER_CODE_MAP.get(weather_code, "Desconocido"),
+                        "weather_category": get_weather_category(weather_code)
+                    })
+            except Exception as e:
+                continue
+        
+        # Añadir el día con su histórico de 5 años
+        if historical_data:
+            final_result.append({
+                "date": target_date_str,
+                "historical_data": historical_data
+            })
+    
     return final_result
 
 if __name__ == "__main__":

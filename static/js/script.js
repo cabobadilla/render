@@ -1,11 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Set default dates (today and 7 days from now)
+    // Set default date (today)
     const today = new Date();
-    const nextWeek = new Date();
-    nextWeek.setDate(today.getDate() + 7);
-    
     document.getElementById('start-date').value = formatDate(today);
-    document.getElementById('end-date').value = formatDate(nextWeek);
     
     // Form submission event listener
     const form = document.getElementById('forecast-form');
@@ -25,7 +21,6 @@ async function fetchForecast(event) {
     // Get form values
     const city = document.getElementById('city').value;
     const startDate = document.getElementById('start-date').value;
-    const endDate = document.getElementById('end-date').value;
     
     // Show loading, hide results and error
     document.getElementById('loading').classList.remove('hidden');
@@ -33,8 +28,8 @@ async function fetchForecast(event) {
     document.getElementById('error-message').classList.add('hidden');
     
     try {
-        // Call the API
-        const response = await fetch(`/forecast?city=${encodeURIComponent(city)}&start_date=${startDate}&end_date=${endDate}`);
+        // Call the API (now only passing start_date)
+        const response = await fetch(`/forecast?city=${encodeURIComponent(city)}&start_date=${startDate}`);
         const data = await response.json();
         
         // Hide loading
@@ -50,7 +45,7 @@ async function fetchForecast(event) {
         displayResults(city, data);
     } catch (error) {
         document.getElementById('loading').classList.add('hidden');
-        showError('Error al obtener el pronóstico. Por favor, intenta de nuevo.');
+        showError('Error al obtener los datos históricos. Por favor, intenta de nuevo.');
         console.error('Error:', error);
     }
 }
@@ -73,25 +68,61 @@ function displayResults(city, forecast) {
     if (forecast.length === 0) {
         forecastContainer.innerHTML = '<p>No se encontraron datos históricos para este período.</p>';
     } else {
-        // Create a card for each forecast day
+        // Create a column for each day
         forecast.forEach(day => {
-            const card = document.createElement('div');
-            card.className = 'forecast-card';
+            const dayColumn = document.createElement('div');
+            dayColumn.className = 'day-column';
             
             // Format date (from YYYY-MM-DD to DD/MM/YYYY)
             const dateParts = day.date.split('-');
             const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
             
-            card.innerHTML = `
-                <div class="forecast-date">${formattedDate}</div>
-                <div class="forecast-temp">${day.expected_avg_temp_c}°C</div>
-                <div class="forecast-condition">${day.expected_condition_text}</div>
-            `;
+            // Day header
+            const dayHeader = document.createElement('div');
+            dayHeader.className = 'day-header';
+            dayHeader.textContent = formattedDate;
+            dayColumn.appendChild(dayHeader);
             
-            forecastContainer.appendChild(card);
+            // Create a card for each historical year
+            day.historical_data.forEach(yearData => {
+                const card = document.createElement('div');
+                card.className = 'history-card';
+                
+                card.innerHTML = `
+                    <div class="year">${yearData.year}</div>
+                    <div class="temps">
+                        <span class="temp-max">${yearData.temp_max.toFixed(1)}°</span>
+                        <span class="temp-sep">/</span>
+                        <span class="temp-min">${yearData.temp_min.toFixed(1)}°</span>
+                    </div>
+                    <div class="weather-category ${getWeatherClass(yearData.weather_category)}">
+                        ${yearData.weather_category}
+                    </div>
+                `;
+                
+                dayColumn.appendChild(card);
+            });
+            
+            forecastContainer.appendChild(dayColumn);
         });
     }
     
     // Show results section
     document.getElementById('results').classList.remove('hidden');
+}
+
+function getWeatherClass(category) {
+    const classMap = {
+        'Soleado': 'sunny',
+        'Parcialmente nublado': 'partly-cloudy',
+        'Nublado': 'cloudy',
+        'Niebla': 'foggy',
+        'Llovizna': 'drizzle',
+        'Lluvia': 'rainy',
+        'Nieve': 'snowy',
+        'Tormenta': 'stormy',
+        'Desconocido': 'unknown'
+    };
+    
+    return classMap[category] || 'unknown';
 } 
