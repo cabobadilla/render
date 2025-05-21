@@ -67,62 +67,104 @@ function displayResults(city, forecast) {
     // If no results
     if (forecast.length === 0) {
         forecastContainer.innerHTML = '<p>No se encontraron datos históricos para este período.</p>';
-    } else {
-        // Create a column for each day
+        document.getElementById('results').classList.remove('hidden');
+        return;
+    }
+    
+    // Create table
+    const table = document.createElement('table');
+    table.className = 'weather-table';
+    
+    // Add header row with dates
+    const headerRow = document.createElement('tr');
+    const emptyHeader = document.createElement('th');
+    emptyHeader.textContent = 'Año';
+    headerRow.appendChild(emptyHeader);
+    
+    // Add date headers
+    forecast.forEach(day => {
+        const dateParts = day.date.split('-');
+        const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+        const th = document.createElement('th');
+        th.textContent = formattedDate;
+        headerRow.appendChild(th);
+    });
+    
+    const thead = document.createElement('thead');
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+    
+    // Create table body
+    const tbody = document.createElement('tbody');
+    
+    // Get all unique years from the data
+    const allYears = new Set();
+    forecast.forEach(day => {
+        day.historical_data.forEach(yearData => {
+            allYears.add(yearData.year);
+        });
+    });
+    
+    // Sort years in descending order
+    const sortedYears = Array.from(allYears).sort((a, b) => b - a);
+    
+    // Create a row for each year
+    sortedYears.forEach(year => {
+        const row = document.createElement('tr');
+        
+        // Add year cell
+        const yearCell = document.createElement('td');
+        yearCell.textContent = year;
+        yearCell.className = 'year-cell';
+        row.appendChild(yearCell);
+        
+        // Add data for each day
         forecast.forEach(day => {
-            const dayColumn = document.createElement('div');
-            dayColumn.className = 'day-column';
+            const cell = document.createElement('td');
             
-            // Format date (from YYYY-MM-DD to DD/MM/YYYY)
-            const dateParts = day.date.split('-');
-            const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+            // Find the data for this year and day
+            const yearData = day.historical_data.find(data => data.year === year);
             
-            // Day header
-            const dayHeader = document.createElement('div');
-            dayHeader.className = 'day-header';
-            dayHeader.textContent = formattedDate;
-            dayColumn.appendChild(dayHeader);
-            
-            // Create a card for each historical year
-            day.historical_data.forEach(yearData => {
-                const card = document.createElement('div');
-                card.className = 'history-card';
-                
-                card.innerHTML = `
-                    <div class="year">${yearData.year}</div>
-                    <div class="temps">
+            if (yearData) {
+                cell.innerHTML = `
+                    <div class="temp-container">
                         <span class="temp-max">${yearData.temp_max.toFixed(1)}°</span>
                         <span class="temp-sep">/</span>
                         <span class="temp-min">${yearData.temp_min.toFixed(1)}°</span>
                     </div>
-                    <div class="weather-category ${getWeatherClass(yearData.weather_category)}">
-                        ${yearData.weather_category}
-                    </div>
+                    <div class="weather-icon ${getWeatherIconClass(yearData.weather_category)}" 
+                         title="${yearData.weather_category}"></div>
                 `;
-                
-                dayColumn.appendChild(card);
-            });
+            } else {
+                cell.textContent = 'N/A';
+                cell.className = 'no-data';
+            }
             
-            forecastContainer.appendChild(dayColumn);
+            row.appendChild(cell);
         });
-    }
+        
+        tbody.appendChild(row);
+    });
+    
+    table.appendChild(tbody);
+    forecastContainer.appendChild(table);
     
     // Show results section
     document.getElementById('results').classList.remove('hidden');
 }
 
-function getWeatherClass(category) {
-    const classMap = {
-        'Soleado': 'sunny',
-        'Parcialmente nublado': 'partly-cloudy',
-        'Nublado': 'cloudy',
-        'Niebla': 'foggy',
-        'Llovizna': 'drizzle',
-        'Lluvia': 'rainy',
-        'Nieve': 'snowy',
-        'Tormenta': 'stormy',
-        'Desconocido': 'unknown'
+function getWeatherIconClass(category) {
+    const iconMap = {
+        'Soleado': 'icon-sunny',
+        'Parcialmente nublado': 'icon-partly-cloudy',
+        'Nublado': 'icon-cloudy',
+        'Niebla': 'icon-foggy',
+        'Llovizna': 'icon-drizzle',
+        'Lluvia': 'icon-rainy',
+        'Nieve': 'icon-snowy',
+        'Tormenta': 'icon-stormy',
+        'Desconocido': 'icon-unknown'
     };
     
-    return classMap[category] || 'unknown';
+    return iconMap[category] || 'icon-unknown';
 } 

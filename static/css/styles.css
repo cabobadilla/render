@@ -138,52 +138,47 @@ input {
     color: var(--primary-color);
 }
 
-#forecast-container {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
-.day-column {
-    background-color: var(--light-gray);
-    border-radius: 8px;
-    padding: 1rem;
+/* Table Styles */
+.weather-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
     box-shadow: var(--card-shadow);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-.day-header {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
+.weather-table th,
+.weather-table td {
+    padding: 0.75rem;
     text-align: center;
-    color: var(--primary-color);
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 0.5rem;
+    border: 1px solid #e0e0e0;
 }
 
-.history-card {
-    background-color: white;
-    border-radius: 6px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.weather-table thead {
+    background-color: var(--primary-color);
+    color: white;
 }
 
-.history-card:last-child {
-    margin-bottom: 0;
+.weather-table th {
+    font-weight: 600;
 }
 
-.year {
+.weather-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.weather-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.year-cell {
     font-weight: bold;
-    min-width: 60px;
+    background-color: #f5f5f5;
 }
 
-.temps {
-    flex: 1;
-    text-align: center;
+.temp-container {
+    margin-bottom: 0.5rem;
 }
 
 .temp-max {
@@ -196,56 +191,60 @@ input {
 }
 
 .temp-sep {
-    margin: 0 5px;
+    margin: 0 2px;
     color: #999;
 }
 
-.weather-category {
-    min-width: 140px;
-    padding: 4px 8px;
-    border-radius: 4px;
-    text-align: center;
-    font-size: 0.9rem;
+.no-data {
+    color: #999;
+    font-style: italic;
 }
 
-.sunny {
-    background-color: #fef9e7;
-    color: #d35400;
+/* Weather Icons */
+.weather-icon {
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 0 auto;
 }
 
-.partly-cloudy {
-    background-color: #faf9f9;
-    color: #7f8c8d;
+.icon-sunny {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23f1c40f"><circle cx="12" cy="12" r="5"/><path d="M12 3v2M12 19v2M5.64 5.64l1.41 1.41M16.95 16.95l1.41 1.41M3 12h2M19 12h2M5.64 18.36l1.41-1.41M16.95 7.05l1.41-1.41"/></svg>');
 }
 
-.cloudy {
-    background-color: #f8f9f9;
-    color: #7f8c8d;
+.icon-partly-cloudy {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="8" cy="6" r="3" fill="%23f1c40f"/><path fill="%2395a5a6" d="M18 14h-1.5c0-3.59-2.91-6.5-6.5-6.5-2.69 0-5.05 1.64-6.04 4h-.46C2.12 11.5 1 12.62 1 14s1.12 2.5 2.5 2.5h14c1.38 0 2.5-1.12 2.5-2.5s-1.12-2.5-2.5-2.5z"/></svg>');
 }
 
-.foggy {
-    background-color: #f7f9f9;
-    color: #95a5a6;
+.icon-cloudy {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2395a5a6"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>');
 }
 
-.drizzle {
-    background-color: #eaf2f8;
-    color: #3498db;
+.icon-foggy {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2395a5a6"><path d="M5 5h14M5 10h14M5 15h14M5 20h14"/></svg>');
 }
 
-.rainy {
-    background-color: #d6eaf8;
-    color: #2874a6;
+.icon-drizzle {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%2395a5a6" d="M19 8h-1.26c-.19-.73-.48-1.42-.85-2.06-.17-.3-.36-.59-.56-.87-.01-.01-.02-.03-.03-.04-.32-.45-.88-.58-1.3-.25-.42.33-.45.88-.13 1.33.16.22.31.46.44.7.28.53.5 1.1.63 1.7-.31-.12-.64-.2-.99-.2-.78 0-1.49.29-2.03.77-.39-.44-.97-.77-1.65-.77-.5 0-.96.15-1.34.4-.35-.46-.91-.75-1.55-.75-.56 0-1.07.19-1.48.5C8.24 8.1 7.66 8 7 8c-2.21 0-4 1.79-4 4s1.79 4 4 4h12c1.66 0 3-1.34 3-3s-1.34-3-3-3z"/><path fill="%233498db" d="M10 19l-2 3M14 19l-2 3M12 17l-2 3"/></svg>');
 }
 
-.snowy {
-    background-color: #f8f9f9;
-    color: #7f8c8d;
+.icon-rainy {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%2395a5a6" d="M19 8h-1.26c-.19-.73-.48-1.42-.85-2.06-.17-.3-.36-.59-.56-.87-.01-.01-.02-.03-.03-.04-.32-.45-.88-.58-1.3-.25-.42.33-.45.88-.13 1.33.16.22.31.46.44.7.28.53.5 1.1.63 1.7-.31-.12-.64-.2-.99-.2-.78 0-1.49.29-2.03.77-.39-.44-.97-.77-1.65-.77-.5 0-.96.15-1.34.4-.35-.46-.91-.75-1.55-.75-.56 0-1.07.19-1.48.5C8.24 8.1 7.66 8 7 8c-2.21 0-4 1.79-4 4s1.79 4 4 4h12c1.66 0 3-1.34 3-3s-1.34-3-3-3z"/><path fill="%233498db" d="M8 18v3M12 18v3M16 18v3M10 20v3M14 20v3"/></svg>');
 }
 
-.stormy {
-    background-color: #ebedef;
-    color: #2c3e50;
+.icon-stormy {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%2395a5a6" d="M19 8h-1.26c-.19-.73-.48-1.42-.85-2.06-.17-.3-.36-.59-.56-.87-.01-.01-.02-.03-.03-.04-.32-.45-.88-.58-1.3-.25-.42.33-.45.88-.13 1.33.16.22.31.46.44.7.28.53.5 1.1.63 1.7-.31-.12-.64-.2-.99-.2-.78 0-1.49.29-2.03.77-.39-.44-.97-.77-1.65-.77-.5 0-.96.15-1.34.4-.35-.46-.91-.75-1.55-.75-.56 0-1.07.19-1.48.5C8.24 8.1 7.66 8 7 8c-2.21 0-4 1.79-4 4s1.79 4 4 4h12c1.66 0 3-1.34 3-3s-1.34-3-3-3z"/><path fill="%23f1c40f" d="M12 16l-2 4h4l-2 4"/></svg>');
+}
+
+.icon-snowy {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%2395a5a6" d="M19 8h-1.26c-.19-.73-.48-1.42-.85-2.06-.17-.3-.36-.59-.56-.87-.01-.01-.02-.03-.03-.04-.32-.45-.88-.58-1.3-.25-.42.33-.45.88-.13 1.33.16.22.31.46.44.7.28.53.5 1.1.63 1.7-.31-.12-.64-.2-.99-.2-.78 0-1.49.29-2.03.77-.39-.44-.97-.77-1.65-.77-.5 0-.96.15-1.34.4-.35-.46-.91-.75-1.55-.75-.56 0-1.07.19-1.48.5C8.24 8.1 7.66 8 7 8c-2.21 0-4 1.79-4 4s1.79 4 4 4h12c1.66 0 3-1.34 3-3s-1.34-3-3-3z"/><path fill="%23ecf0f1" d="M8 18l2 2M8 20l2-2M12 18l2 2M12 20l2-2M16 18l2 2M16 20l2-2"/></svg>');
+}
+
+.icon-unknown {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23999"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-4h2v2h-2zm2.07-7.75l-.9.92C11.45 10.9 11 11.5 11 13h2c0-1.13.39-1.77.88-2.27l.91-.92c.57-.58.89-1.39.89-2.22 0-1.66-1.34-3-3-3-1.31 0-2.42.83-2.83 2H11c.3-.6.93-1 1.67-1 1.11 0 2 .89 2 2 0 .55-.23 1.05-.59 1.41z"/></svg>');
 }
 
 footer {
@@ -270,13 +269,26 @@ footer a:hover {
         padding: 1rem;
     }
     
-    .history-card {
-        flex-direction: column;
-        gap: 0.5rem;
-        text-align: center;
+    .weather-table {
+        font-size: 0.9rem;
     }
     
-    .weather-category {
-        width: 100%;
+    .weather-table th,
+    .weather-table td {
+        padding: 0.5rem;
+    }
+    
+    .weather-icon {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .temp-container {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .temp-sep {
+        display: none;
     }
 } 
