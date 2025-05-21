@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicción del Tiempo Histórica</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Predicción del Tiempo Basada en Datos Históricos</h1>
+            <p>Consulta el pronóstico basado en datos meteorológicos de los últimos 5 años</p>
+        </header>
+
+        <section class="search-form">
+            <form id="forecast-form">
+                <div class="form-group">
+                    <label for="city">Ciudad:</label>
+                    <input type="text" id="city" name="city" required placeholder="Ej: Santiago, Chile">
+                </div>
+                
+                <div class="form-group date-inputs">
+                    <div>
+                        <label for="start-date">Fecha inicial:</label>
+                        <input type="date" id="start-date" name="start_date" required>
+                    </div>
+                    <div>
+                        <label for="end-date">Fecha final:</label>
+                        <input type="date" id="end-date" name="end_date" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="search-btn">Buscar Pronóstico</button>
+            </form>
+        </section>
+
+        <div id="loading" class="hidden">
+            <div class="loader"></div>
+            <p>Consultando datos históricos...</p>
+        </div>
+
+        <section id="error-message" class="hidden">
+            <p class="error"></p>
+        </section>
+
+        <section id="results" class="hidden">
+            <h2>Pronóstico para <span id="city-name"></span></h2>
+            <div id="forecast-container"></div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Basado en datos históricos de los últimos 5 años | <a href="https://open-meteo.com/" target="_blank">Datos de Open-Meteo</a></p>
+    </footer>
+
+    <script src="{{ url_for('static', path='/js/script.js') }}"></script>
+</body>
+</html> 

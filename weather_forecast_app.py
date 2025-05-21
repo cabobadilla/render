@@ -1,6 +1,8 @@
 # weather_forecast_app.py (adaptado para entorno sin ssl y Nominatim con User-Agent)
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from typing import List
 import statistics
 from datetime import datetime, timedelta
@@ -12,6 +14,10 @@ except ImportError:
     raise ImportError("El módulo 'requests' no está instalado. Instálalo con 'pip install requests'")
 
 app = FastAPI()
+
+# Configurar archivos estáticos y templates
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 GEOCODING_URL = "http://nominatim.openstreetmap.org/search"
 WEATHER_URL = "http://archive-api.open-meteo.com/v1/archive"
@@ -47,6 +53,10 @@ WEATHER_CODE_MAP = {
     96: "Tormenta con granizo ligero",
     99: "Tormenta con granizo fuerte"
 }
+
+@app.get("/", response_class=templates.TemplateResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/forecast")
 def historical_forecast(city: str, start_date: str, end_date: str):
