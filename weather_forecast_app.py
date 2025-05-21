@@ -1,9 +1,10 @@
-# weather_forecast_app.py (adaptado para entorno sin ssl)
+# weather_forecast_app.py (adaptado para entorno sin ssl y Nominatim con User-Agent)
 
 from fastapi import FastAPI
 from typing import List
 import statistics
 from datetime import datetime, timedelta
+import os
 
 try:
     import requests
@@ -14,6 +15,7 @@ app = FastAPI()
 
 GEOCODING_URL = "http://nominatim.openstreetmap.org/search"
 WEATHER_URL = "http://archive-api.open-meteo.com/v1/archive"
+HEADERS = {"User-Agent": "weather-app/1.0 (cbobadilla.dsoft@gmail.com)"}  # requerido por Nominatim
 
 WEATHER_CODE_MAP = {
     0: "Despejado",
@@ -57,9 +59,9 @@ def historical_forecast(city: str, start_date: str, end_date: str):
     if start > end:
         return {"error": "start_date debe ser anterior a end_date"}
 
-    # Obtener lat/lon de la ciudad usando Nominatim (HTTP para evitar SSL)
+    # Obtener lat/lon de la ciudad usando Nominatim (con header User-Agent obligatorio)
     try:
-        geo_resp = requests.get(GEOCODING_URL, params={"q": city, "format": "json", "limit": 1})
+        geo_resp = requests.get(GEOCODING_URL, params={"q": city, "format": "json", "limit": 1}, headers=HEADERS)
         geo_resp.raise_for_status()
         geo_data = geo_resp.json()
     except Exception:
@@ -142,4 +144,5 @@ def historical_forecast(city: str, start_date: str, end_date: str):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("weather_forecast_app:app", host="0.0.0.0", port=8000, reload=False)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("weather_forecast_app:app", host="0.0.0.0", port=port, reload=False)
