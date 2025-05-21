@@ -71,6 +71,14 @@ function displayResults(city, forecast) {
         return;
     }
     
+    // Add scroll indicator for mobile
+    if (window.innerWidth <= 768) {
+        const scrollIndicator = document.createElement('div');
+        scrollIndicator.className = 'scroll-indicator';
+        scrollIndicator.textContent = 'Desliza horizontalmente para ver más datos';
+        forecastContainer.appendChild(scrollIndicator);
+    }
+    
     // Create table
     const table = document.createElement('table');
     table.className = 'weather-table';
@@ -84,7 +92,7 @@ function displayResults(city, forecast) {
     // Add date headers
     forecast.forEach(day => {
         const dateParts = day.date.split('-');
-        const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+        const formattedDate = `${dateParts[2]}/${dateParts[1]}`;
         const th = document.createElement('th');
         th.textContent = formattedDate;
         headerRow.appendChild(th);
@@ -151,6 +159,19 @@ function displayResults(city, forecast) {
     
     // Show results section
     document.getElementById('results').classList.remove('hidden');
+    
+    // Add scroll detection for indicator
+    if (window.innerWidth <= 768) {
+        const tableContainer = document.getElementById('forecast-container');
+        tableContainer.addEventListener('scroll', function() {
+            const scrollIndicator = tableContainer.querySelector('.scroll-indicator');
+            if (this.scrollLeft > 10) {
+                scrollIndicator.style.opacity = '0';
+            } else {
+                scrollIndicator.style.opacity = '1';
+            }
+        });
+    }
 }
 
 function getWeatherIconClass(category) {

@@ -156,6 +156,14 @@ input:focus {
     letter-spacing: 0.5px;
 }
 
+/* Contenedor de tabla con scroll horizontal en móviles */
+#forecast-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Para iOS */
+    margin-bottom: 1rem;
+}
+
 /* Table Styles */
 .weather-table {
     width: 100%;
@@ -163,6 +171,7 @@ input:focus {
     margin-top: 1rem;
     background-color: var(--content-bg);
     overflow: hidden;
+    min-width: 600px; /* Ancho mínimo para asegurar legibilidad */
 }
 
 .weather-table th,
@@ -286,8 +295,29 @@ footer a:hover {
     text-decoration: underline;
 }
 
+/* Scroll horizontal indicator para móviles */
+.scroll-indicator {
+    display: none;
+    text-align: center;
+    color: #999;
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+/* Media queries para responsividad */
 @media (max-width: 768px) {
     .container {
+        padding: 1rem;
+    }
+    
+    #results {
         padding: 1rem;
     }
     
@@ -297,7 +327,7 @@ footer a:hover {
     
     .weather-table th,
     .weather-table td {
-        padding: 0.5rem;
+        padding: 0.5rem 0.3rem;
     }
     
     .weather-icon {
@@ -312,5 +342,33 @@ footer a:hover {
     
     .temp-sep {
         display: none;
+    }
+    
+    .scroll-indicator {
+        display: block;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .search-form {
+        padding: 1rem;
+    }
+    
+    .weather-table {
+        font-size: 0.75rem;
+    }
+    
+    .weather-table th,
+    .weather-table td {
+        padding: 0.4rem 0.2rem;
+    }
+    
+    .weather-icon {
+        width: 20px;
+        height: 20px;
     }
 } 
