@@ -134,6 +134,19 @@ function displayResults(city, forecast) {
             const yearData = day.historical_data.find(data => data.year === year);
             
             if (yearData) {
+                // Formatear datos de precipitación y sunshine
+                const precipitationStr = yearData.precipitation !== null ? 
+                    `<div class="precipitation" title="Precipitación">
+                        <span class="precipitation-icon"></span>
+                        <span>${yearData.precipitation.toFixed(1)} mm</span>
+                    </div>` : '';
+                
+                const sunshineStr = yearData.sunshine !== null ? 
+                    `<div class="sunshine" title="Horas de sol">
+                        <span class="sunshine-icon"></span>
+                        <span>${formatSunshineHours(yearData.sunshine)}</span>
+                    </div>` : '';
+                
                 cell.innerHTML = `
                     <div class="temp-container">
                         <span class="temp-max">${yearData.temp_max.toFixed(1)}°</span>
@@ -142,6 +155,10 @@ function displayResults(city, forecast) {
                     </div>
                     <div class="weather-icon ${getWeatherIconClass(yearData.weather_category)}" 
                          title="${yearData.weather_category}"></div>
+                    <div class="additional-data">
+                        ${precipitationStr}
+                        ${sunshineStr}
+                    </div>
                 `;
             } else {
                 cell.textContent = 'N/A';
@@ -172,6 +189,13 @@ function displayResults(city, forecast) {
             }
         });
     }
+}
+
+// Función para formatear las horas de sol (convertir de segundos a horas)
+function formatSunshineHours(seconds) {
+    if (seconds === null) return '-';
+    const hours = seconds / 3600; // 3600 segundos = 1 hora
+    return hours.toFixed(1) + ' h';
 }
 
 function getWeatherIconClass(category) {

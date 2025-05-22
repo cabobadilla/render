@@ -123,7 +123,7 @@ def historical_forecast(city: str, start_date: str):
                     "longitude": lon,
                     "start_date": historic_date_str,
                     "end_date": historic_date_str,
-                    "daily": "temperature_2m_max,temperature_2m_min,weathercode",
+                    "daily": "temperature_2m_max,temperature_2m_min,weathercode,precipitation_sum,sunshine_duration",
                     "timezone": "auto"
                 })
                 weather_resp.raise_for_status()
@@ -138,6 +138,8 @@ def historical_forecast(city: str, start_date: str):
                     temp_max = daily_data.get("temperature_2m_max", [])[idx]
                     temp_min = daily_data.get("temperature_2m_min", [])[idx]
                     weather_code = daily_data.get("weathercode", [])[idx]
+                    precipitation = daily_data.get("precipitation_sum", [])[idx]
+                    sunshine = daily_data.get("sunshine_duration", [])[idx]
                     
                     historical_data.append({
                         "year": historic_date.year,
@@ -145,7 +147,9 @@ def historical_forecast(city: str, start_date: str):
                         "temp_min": temp_min,
                         "weather_code": weather_code,
                         "weather_text": WEATHER_CODE_MAP.get(weather_code, "Desconocido"),
-                        "weather_category": get_weather_category(weather_code)
+                        "weather_category": get_weather_category(weather_code),
+                        "precipitation": precipitation,
+                        "sunshine": sunshine
                     })
             except Exception as e:
                 continue
